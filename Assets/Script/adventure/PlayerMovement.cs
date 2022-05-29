@@ -60,11 +60,11 @@ void Update(){
     anim.SetBool("isRunning", isMoving);
             if (rb.velocity.x > 0.01)
             {
-                transform.localScale = new Vector3(1f, 1f, 1f);
+                transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             }
             else if (rb.velocity.x < -0.01)
             {
-                transform.localScale = new Vector3(-1f, 1f, 1f);
+                transform.localScale = new Vector3(-0.3f, 0.3f, 0.3f);
             }
     if(Input.GetKeyDown(KeyCode.UpArrow) || (buttonJump == true)){
 
