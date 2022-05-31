@@ -17,7 +17,8 @@ private Animator anim;
 private bool isMoving;
 private bool isGrounded;
 private bool isPullLever;
-// private int jumpCount = 0;
+private int jumpCount;
+public int DefaultJumpCount = 2;
 // private bool isJump;
 
 public bool buttonUp;
@@ -28,12 +29,20 @@ public bool buttonJump;
 public bool buttonPullLever;
 
 
+private Vector3 DefaultScale;
+
+
+
+
+
 void Start(){
 
     // playerActionControls = new PlayerActionControl();
     rb = GetComponent<Rigidbody2D>();
     col = GetComponent<Collider2D>();
     anim = GetComponent<Animator>();
+    DefaultScale = new Vector3(rb.transform.localScale.x, rb.transform.localScale.y, rb.transform.localScale.z);
+    jumpCount = DefaultJumpCount;
 }
 
 void Update(){
@@ -60,34 +69,22 @@ void Update(){
     anim.SetBool("isRunning", isMoving);
             if (rb.velocity.x > 0.01)
             {
-                transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                
+                transform.localScale = new Vector3(DefaultScale.x, DefaultScale.y, DefaultScale.z);
             }
             else if (rb.velocity.x < -0.01)
             {
-                transform.localScale = new Vector3(-0.3f, 0.3f, 0.3f);
+                transform.localScale = new Vector3(-DefaultScale.x, DefaultScale.y, DefaultScale.z);
             }
-    if(Input.GetKeyDown(KeyCode.UpArrow) || (buttonJump == true)){
-
-            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
-            anim.SetTrigger("isJumping");
-            // jumpCount = 1;
-            // isJump = true;
-
-
-            isGrounded = false;
-
-        if(Input.GetKeyDown(KeyCode.DownArrow) || (buttonPullLever == true)){
-
-           
-            anim.SetTrigger("isPullLever");
-        }
-    }
-
-
 
 
     anim.SetBool("isGround", isGrounded);
 
+    if(Input.GetKeyDown(KeyCode.DownArrow) || (buttonPullLever == true)){
+
+            Debug.Log("Narik Tuas");
+            // anim.SetTrigger("isPullLever");
+    }
 
 
   
@@ -97,20 +94,13 @@ void Update(){
 
 void OnCollisionEnter2D(Collision2D col){
 
-    // if(col.gameObject.tag == "interactiveLever"){
 
-    //     isGrounded = true;
-
-
-      
-
-        
-
-    // }
 
     if(col.gameObject.tag == "Ground"){
 
         isGrounded = true;
+        jumpCount = DefaultJumpCount;
+
 
         
 
@@ -157,7 +147,16 @@ public void Button_DownReleased(){
 }
 
 public void Button_Jump(){
-    buttonJump = true;
+
+
+    if (jumpCount >0){
+
+            rb.velocity = new Vector2(rb.velocity.x, jumpSpeed);
+            anim.SetTrigger("isJumping");
+            isGrounded = false;
+            jumpCount -= 1;
+
+    }
 
 }
 public void Button_JumpReleased(){
@@ -167,7 +166,21 @@ public void Button_JumpReleased(){
 
 public void Button_PullLever(){
 
-    buttonPullLever = true;
+
+    // if(pressButtonPullLever < 1){
+
+    //     pressButtonPullLever += Time.deltaTime;
+    //     buttonPullLever = true;
+    // }
+
+    // if(pressButtonPullLever > 1){
+
+    //     buttonPullLever = false;
+    // }
+
+    anim.SetTrigger("isPullLever");
+
+
 
 }
 
@@ -176,6 +189,10 @@ public void Button_PullLeverReleased(){
     buttonPullLever = false;
 
 }
+
+
+
+
 
 }
 
